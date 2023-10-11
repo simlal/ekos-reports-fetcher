@@ -13,7 +13,10 @@ We used 3 data sources :
 - Manually entered brewlogs in SharePoint
 
 **Ekos batch info, fermentation and ingredient data**
-From Ekos' reporting page, we can fetch batch information, fermentation logs and ingredients. Since there's no API we used a web scrapping approach with Selenium to fetch the report programmatically.
+From Ekos' reporting page, we can fetch batch information, fermentation logs and ingredients. Since there's no API we used a web scrapping approach with Selenium to fetch the report programmatically. The script used is located in the `data/fetch_ekos.py`.
+
+**Plaato fermentation data**
+We used the Plaato API to fetch fermentation data. The script used is located in the `data/fetch_plaato.py`.
 
 **Brew logs from SharePoint**
 Brew logs are entered manually in SharePoint. We used ?? to fetch the Excel spreadsheets.
