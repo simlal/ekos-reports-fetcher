@@ -39,15 +39,8 @@ async function pageTimeout(ms) {
 function renameDownload(savePath, newName) {
     fs.readdir(savePath, (err, files) => {
         if (err) throw err;
-        
+        // Rename the newly download file
         for (const file of files) {
-            // Delete exising file with target name
-            if (file === newName) {
-                fs.unlink(path.join(savePath, file), err => {
-                    if (err) throw err;
-                });
-            }
-            // Rename the newly download file
             if (path.extname(file) === ".csv" && !newReportFileNames.includes(file)) {
                 fs.rename(path.join(savePath, file), path.join(savePath, newName), err => {
                     if (err) throw err;
@@ -56,9 +49,27 @@ function renameDownload(savePath, newName) {
         }
     });
 }
+// Clear data folder
+function clearData(savePath) {
+    fs.readdir(savePath, (err, files) => {
+        if (err) throw err;
+        for (const file of files) {
+            // Delete exising file with target name
+            if (file) {
+                fs.unlink(path.join(savePath, file), err => {
+                    if (err) throw err;
+                });
+            }
+        }
+    });
+}
+module.exports = { clearData };
 
 // Main function to fetch Ekos data
 async function fetchEkosData(launchParams) {
+    // Clear data folder
+    clearData(savePath);
+
     // Launch browser
     const browser = await puppeteer.launch(launchParams);
     const page = await browser.newPage();
