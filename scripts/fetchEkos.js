@@ -99,17 +99,45 @@ async function fetchEkosData(launchParams) {
     await page.waitForSelector("a.nav-option:nth-child(1)")
         .then(button => button.click());
     
-    // *** Fetch brewInfo report ***
+    // *** Fetch relevant reports ***
     for (let i = 0; i < reportNameQuerries.length; i++) {
         let reportName = reportNameQuerries[i];
         // Type in report name and naviguate to report page
-        await page.waitForSelector("input.sc-uVWWZ.jjluET.sc-Nxspf.dXYREZ.ReportsList__StyledSearchInput-reports-ui__sc-wzkmmj-2.iBbXOq");
-        await page.type(
-            "input.sc-uVWWZ.jjluET.sc-Nxspf.dXYREZ.ReportsList__StyledSearchInput-reports-ui__sc-wzkmmj-2.iBbXOq", 
-            reportName,
-            {delay: 1});
+        const reportSearchBoxSelector = 
+            "input.sc-uVWWZ.jjluET.sc-Nxspf.dXYREZ.ReportsList__StyledSearchInput-reports-ui__sc-wzkmmj-2.iBbXOq";
+        await page.waitForSelector(reportSearchBoxSelector);
+                
+        await page.evaluate((selector) => {    // clear the field
+            document.querySelector(selector).value = "";
+        }, reportSearchBoxSelector);
 
-        await page.waitForSelector(".Link-reports-ui__sc-81gbfs-0")
+        await page.type(
+            reportSearchBoxSelector, 
+            reportName,
+            {delay: 3});
+
+        // Wait for a selector that contains the reportName in its innerHTML
+        const reportLinkSelector = ".Link-reports-ui__sc-81gbfs-0.ddnYoF";
+        // await page.waitForFunction(
+        //     (reportName, reportLinkSelector) => {
+        //       return page.evaluate((reportName, reportLinkSelector) => {
+        //         const elements = document.querySelectorAll(reportLinkSelector);
+        //         for (let i = 0; i < elements.length; i++) {
+        //           if (elements[i].innerHTML.includes(reportName)) {
+        //             return true;
+        //           }
+        //         }
+        //         return false;
+        //       }, reportName, reportLinkSelector);
+        //     },
+        //     {},
+        //     reportName,
+        //     reportLinkSelector
+        //   );
+        
+        // click on single report
+        await pageTimeout(2000)    //TODO FIND BETTER WAY BUT TEMP FIX
+        await page.waitForSelector(reportLinkSelector)
             .then(a => a.click());
 
         // Wait for loading indicator to finish
