@@ -18,7 +18,7 @@ const pptrLaunchParams = {
     },
     downloadTimeout: 5000
 }
-const savePath = path.join(__dirname, "..", "data")
+const savePath = path.join(__dirname, "..", "data", "ekos-reports")
 
 // Ekos related data
 const ekosLoginUrl = "https://login.goekos.com/";
@@ -51,6 +51,11 @@ function renameDownload(savePath, newName) {
 }
 // Clear data folder
 function clearData(savePath) {
+    // Create dir if not already
+    if (!fs.existsSync(savePath)) {
+        fs.mkdirSync(savePath)
+    }
+    // clear the data
     fs.readdir(savePath, (err, files) => {
         if (err) throw err;
         for (const file of files) {
