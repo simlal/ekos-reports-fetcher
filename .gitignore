@@ -164,3 +164,4 @@ node_modules
 
 # data files
 *.csv
+*.xlsx
