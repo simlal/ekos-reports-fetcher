@@ -3,8 +3,8 @@ const dotenv = require("dotenv");
 const path = require("path")
 const fs = require('fs');
 
-
-const dotenvFile = path.join("..", ".env")
+const scriptDir = path.dirname(__filename)
+const dotenvFile = path.join(scriptDir, "..", ".env")
 dotenv.config({path: dotenvFile})
 
 
@@ -92,6 +92,7 @@ async function fetchEkosData(launchParams) {
     await page.setViewport(launchParams.viewPort);
 
     // Input credentials and login
+    console.log(`Logging in ${process.env.EKOS_USERNAME}`)
     await page.waitForSelector(".input_wrapper");
     await page.type("#txtUsername", process.env.EKOS_USERNAME, {delay: 5})
     await page.type("#txtPassword", process.env.EKOS_PASSWORD, {delay: 5})
