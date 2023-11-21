@@ -1,62 +1,35 @@
-# siboire-ferm-predict
-ML models for beer production parameter prediction from brew log data. 
-
-The deployed app is available at [todo](todo.com).
+# Ekos reports fetcher
 
 ## Overview
-This project is a collection of ML models for predicting beer production parameters from brew log data. 
-
-The models are trained on data from the Siboire craft brewery in Sherbrooke, QC, Canada. The models are trained using the [scikit-learn](https://scikit-learn.org/stable/) library. No deep learning models are used.
+Automate report fetching from Ekos web app using Puppeteer web driver.
 
 ## Requirements
-For the web scraping aspect we will use Puppeteer, a Node library which provides a high-level API to control a Chrome driver. For the data preparation and model training we will use Python 3+ with the traditional pandas/matplotlib/scikit-learn stack.
+For the web scraping aspect we used Puppeteer, a Node library which provides a high-level API to control a Chrome driver. 
 
-## Data collection and database setup
+## Installation
+1. Clone the repository
 
-### Extract Ekos and Sharepoint data
-1. [ ] Puppeteer scripts to extract Ekos reports as csv:
-    - `scripts/fetchEkos.js`
-2. [ ] Python script to get a OAuth token from Sharepoint and fetch Excel spreadsheets:
-    - `scripts/fetch_sharepoint.py`
-3. [ ] Data prep for database with a Python script
+`git clone https://github.com/simlal/ekos-reports-fetcher.git`
 
-### Clean the data and create a MongoDB database
-1. [ ] Create a MongoDB database
-2. [ ] Create a Python script to clean the data and populate the database
+2. Install dependencies
 
-### Setting up a Node.js and Express server
-1. [ ] Install node/npm/nvm + create a new project and install express
-2. [ ] Create a basic server that can serve a static page
+`npm install`
 
-### Create a simple React frontend
-1. [ ] Install React + create a simple React act served by the server
-2. [ ] Make a simple left navibar with a few links
+3. Create a `.env` file in the root directory and add the following variables:
+```
+EKOS_USERNAME=your_username
+EKOS_PASSWORD=your_password
+```
+4. Modify the `EkosRequestInfo.reportNameQuerries` property in `./scripts/fetchEkos.js` to match a search parameter that yields a unique report that you want to fetch. 
 
-## Model selection
+For example, if you want to fetch the report with the name `fermentation-data complete logs`, you can set the `reportNameQuerries` property to `['fermentation-data complete logs']`.
 
-### Data collection
-We used 2 data sources :
-- Reports from Ekos ERP for ferm and product information
-- Manually entered brewlogs in SharePoint
+5. Set the `run_fetcher.sh` permissions to executable
+`chmod +x ./scripts/run_fetcher.sh`
 
-**Ekos batch info, fermentation and ingredient data**
-From Ekos' reporting page, we can fetch batch information, fermentation logs and ingredients. Since there's no API we used a web scrapping approach with Puppeteer to fetch the report programmatically. The script used is located in the `scripts/fetchEkos.js`.
+## Usage
+Run the the `run_fetcher.sh` script to start the fetcher.
 
-<!-- **Plaato fermentation data**
-We used the Plaato API to fetch fermentation data. The script used is located in the `data/fetch_plaato.js`. -->
+`./scripts/run_fetcher.sh`
 
-**Brew logs from SharePoint**
-Brew logs are entered manually in SharePoint. Python to fetch the Excel spreadsheets. The script used is located in the `scripts/fetch_sharepoint.py`.
-
-### Data cleaning
-TODO
-
-### Model selection
-TODO
-
-## Model training and evaluation
-TODO
-
-## Model deployment
-TODO
-
+Reports will be in the `./data/ekos-reports` directory.
